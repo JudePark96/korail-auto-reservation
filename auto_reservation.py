@@ -18,6 +18,7 @@ korail = Korail(membership_number, password, auto_login=True)
 
 passengers = [AdultPassenger()]
 
+# auto_login is True, so if login succeed then korail.logined should be True.
 assert korail.logined is True
 
 
@@ -30,24 +31,25 @@ def search_train_task():
                                             train_type=TrainType.KTX,
                                             include_no_seats=True)
 
+        # based on 10:00 am means length of trains should be greater than 0.
         assert len(trains) != 0
 
         print(trains)
 
+        for train in trains:
+            if train.reserve_possible is not 'N':
+                logging.info('start reservation ...')
+                seat = korail.reserve(train=train, passengers=passengers)
+                logging.info(seat)
+
+                # Reservation succeed => exit.
+                sys.exit()
+
+        threading.Timer(5, search_train_task).start()
+
     except Exception as e:
         logging.error(e)
         time.sleep(2)
-
-    for train in trains:
-        if train.reserve_possible is not 'N':
-            logging.info('start reservation ...')
-            seat = korail.reserve(train=train, passengers=passengers)
-            logging.info(seat)
-
-            # Reservation succeed => exit.
-            sys.exit()
-
-    threading.Timer(5, search_train_task).start()
 
 
 if __name__ == '__main__':
