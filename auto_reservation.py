@@ -8,7 +8,7 @@ logging.basicConfig(
     format='%(asctime)s : %(levelname)s : %(message)s',
     level=logging.INFO)
 
-membership_number = '' # 1466577396
+membership_number = ''  # 1466577396
 password = ''
 dep = '대전'
 arr = '서울'
@@ -17,6 +17,8 @@ date = '20190915'
 korail = Korail(membership_number, password, auto_login=True)
 
 passengers = [AdultPassenger()]
+
+assert korail.logined is True
 
 
 def search_train_task():
@@ -27,6 +29,8 @@ def search_train_task():
                                             time=100000,
                                             train_type=TrainType.KTX,
                                             include_no_seats=True)
+
+        assert len(trains) != 0
 
         print(trains)
 
@@ -55,4 +59,3 @@ if __name__ == '__main__':
 
         time.sleep(2)
         search_train_task()
-
